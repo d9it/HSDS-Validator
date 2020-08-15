@@ -1,0 +1,32 @@
+.bg-gray {
+  background-color: gainsboro;
+  border: 1px solid gray;
+}
+.border-table > thead {
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+}
+.header {
+  border-bottom: 1px solid gray;
+  padding-bottom: 1rem;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+  padding: 10px 10px;
+}
+table {
+  border-spacing: 5px;
+}
+.font-weight-400 {
+  font-weight: 400;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.inputFile {
+  width: 90%;
+  opacity: 1;
+}
