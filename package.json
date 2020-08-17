@@ -9,6 +9,7 @@
     "datapackage": "^1.1.1",
     "element-ui": "^2.13.2",
     "express": "^4.17.1",
+    "extract-zip": "^2.0.1",
     "hapi": "^17.8.1",
     "hapi-swaggered": "^3.0.3",
     "hoek": "^6.1.2",

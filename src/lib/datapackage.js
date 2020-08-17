@@ -256,6 +256,7 @@ class DataPackage {
     }
 
     // get the selected resource definition
+    console.log("resourceName", resourceName);
     const resource = this.package.getResource(resourceName);
 
     // create a new table instance

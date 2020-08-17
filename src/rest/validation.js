@@ -7,6 +7,9 @@
 const _ = require('lodash');
 const Boom = require('boom');
 const Joi = require('joi');
+const fs = require('fs');
+const extract = require('extract-zip');
+const path = require('path');
 
 const {
   ValidationResult
@@ -76,6 +79,317 @@ module.exports = function(server, datapackage) {
 
           return h.response(result).code(200);
         } catch (e) {
+          return Boom.badRequest(e.message);
+        }
+
+      }
+    }
+  });
+
+  server.route({
+    path: '/validate/zip',
+    method: 'POST',
+    config: {
+      tags: ['api'],
+      description: 'Validate a CSV data file using a specific Open Referral resource schema',
+      notes: [
+        'The operation validates an uploaded CSV data stream using the ',
+        'definition of a specified resource as found in the standard Open Referral data package',
+        'specification.  Clients should send a form payload containg a "type" field with the name ',
+        'of the Open Referral logical resource and a "file" that contains the CSV data stream.'
+      ].join(''),
+      plugins: {
+        'hapi-swaggered': {
+          operationId: 'validateCsvResource'
+        }
+      },
+      payload: {
+        output: 'stream',
+        parse: true,
+        allow: 'multipart/form-data'
+      },
+      // response: {
+      //   schema: ValidationResult
+      // },
+      async handler(request, h) {
+
+        // get the uploaded resource type
+        const {
+          payload
+        } = request;
+
+        const {
+          type,
+          file: stream
+        } = payload;
+
+        try {
+
+          if (typeof type === 'undefined') {
+            throw new Error('Form should contain the field "type" with a valid resource name');
+          }
+
+          if (typeof stream === 'undefined') {
+            throw new Error('Form should contain the field "file" with a valid resource data stream');
+          }
+
+          console.log("stream", stream);
+          // validate the input stream using
+          // the provided resource type definition
+          await fs.writeFileSync('filename1.zip', stream._data);
+                    
+          let dirPath = path.join(process.cwd(), "public/"+( (new Date()).getTime()) );
+          if (!fs.existsSync(dirPath)){
+            fs.mkdirSync(dirPath);
+          }
+
+          let resultArr = {};
+          await extract('filename1.zip', { dir: dirPath });
+
+          try {
+            let cName = "accessibility_for_disabilities";
+            let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "contact";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "eligibilty";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "funding";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "holiday_schedule";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "language";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "location";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "meta_table_description";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "metadata";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "organization_id";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "payments_accepted";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "phone";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "physical_address";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "postal_address";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "program";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "regular_schedule";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "required_document";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "service_area";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "service";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "service_at_location";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "service_taxonomy";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          try {
+            let cName = "taxonomy";
+                      let csvPath = path.join(dirPath, cName+".csv");
+            if (fs.existsSync(csvPath)) {
+              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
+            } else {
+              resultArr[cName] = { valid: false };
+            }
+          } catch(err) {
+            console.error(err)
+          }
+          return h.response(resultArr).code(200);
+        } catch (e) { 
           return Boom.badRequest(e.message);
         }
 

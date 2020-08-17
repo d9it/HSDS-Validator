@@ -25,8 +25,19 @@ const ValidationResult = Joi.object().keys({
   description: 'Resource validation result'
 });
 
+const ValidationResultBulk = Joi.object().keys({
+  resource: Joi.string()
+    .description('The resource name'),
+  valid: Joi.boolean().required().description('Status flag indicating whether the resource is valid or not'),
+  errors: Joi.array().items(ValidationError).description('A collection of validation errors')
+}).meta({
+  className: 'ValidationResultBulk',
+  description: 'Resource validation bulk result'
+});
+
 
 module.exports = {
   ValidationError,
-  ValidationResult
+  ValidationResult,
+  ValidationResultBulk
 };

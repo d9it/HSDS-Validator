@@ -77,9 +77,10 @@
             name="zip_file"
             placeholder="Upload Zip"
             id=""
+            @change="handleZipUpload($event)"
           /><br />
           <span class="text-muted">* {{condition}}</span>
-          <button class="m-2 p-1 btn btn-success">
+          <button class="m-2 p-1 btn btn-success" @click="validateZip()">
             Run Validation Process
           </button>
           <div class="row pl-2 pr-2">
@@ -141,40 +142,42 @@
           condition:
             "If uploading zip, data table names must match with HSDS table names",
           files: [
-            // { name: "datapackage", status: "-", result: "-", filename: 'datapackage.json' },
+            // { name: "datapackage", status: "No Data", result: "-", filename: 'datapackage.json' },
             {
               name: "accessibility_for_disabilities",
-              status: "-",
+              status: "No Data",
               result: "-",
               filename: 'accessibility_for_disabilities'
             },
-            { name: "contact", status: "-", result: "-" , filename: 'contact'},
-            { name: "eligibilty", status: "-", result: "-" , filename: 'eligibilty'},
-            { name: "funding", status: "-", result: "-" , filename: 'funding'},
-            { name: "holiday_schedule", status: "-", result: "-" , filename: 'holiday_schedules'},
-            { name: "language", status: "-", result: "-" , filename: 'language'},
-            { name: "location", status: "-", result: "-" , filename: 'location'},
-            { name: "meta_table_description", status: "-", result: "-" , filename: 'meta_table_descriptions'},
-            { name: "metadata", status: "-", result: "-" , filename: 'metadata'},
-            { name: "organization_id", status: "-", result: "-" , filename: 'organization'},
-            { name: "payment_accepted", status: "-", result: "-" , filename: 'payments_accepted'},
-            { name: "phone.csv", status: "-", result: "-" , filename: 'phones'},
-            { name: "physical_addresses", status: "-", result: "-" , filename: 'physical_addresses'},
-            { name: "postal_addresses", status: "-", result: "-" , filename: 'postal_addresses'},
-            { name: "program", status: "-", result: "-" , filename: 'programs'},
-            { name: "regular_schedules", status: "-", result: "-" , filename: 'regular_schedules'},
-            { name: "required_documents", status: "-", result: "-" , filename: 'required_documents'},
-            { name: "service_areas", status: "-", result: "-" , filename: 'service_areas'},
-            { name: "service", status: "-", result: "-" , filename: 'service'},
-            { name: "service_at_location", status: "-", result: "-" , filename: 'services_at_location'},
-            { name: "service_taxonomy", status: "-", result: "-" , filename: 'services_taxonomy'},
-            { name: "taxonamy", status: "-", result: "-" , filename: 'taxonamy'},
+            { name: "contact", status: "No Data", result: "-" , filename: 'contact'},
+            { name: "eligibilty", status: "No Data", result: "-" , filename: 'eligibilty'},
+            { name: "funding", status: "No Data", result: "-" , filename: 'funding'},
+            { name: "holiday_schedule", status: "No Data", result: "-" , filename: 'holiday_schedule'},
+            { name: "language", status: "No Data", result: "-" , filename: 'language'},
+            { name: "location", status: "No Data", result: "-" , filename: 'location'},
+            { name: "meta_table_description", status: "No Data", result: "-" , filename: 'meta_table_description'},
+            { name: "metadata", status: "No Data", result: "-" , filename: 'metadata'},
+            { name: "organization", status: "No Data", result: "-" , filename: 'organization_id'},
+            { name: "payment_accepted", status: "No Data", result: "-" , filename: 'payments_accepted'},
+            { name: "phone", status: "No Data", result: "-" , filename: 'phone'},
+            { name: "physical_addresses", status: "No Data", result: "-" , filename: 'physical_address'},
+            { name: "postal_addresses", status: "No Data", result: "-" , filename: 'postal_address'},
+            { name: "program", status: "No Data", result: "-" , filename: 'program'},
+            { name: "regular_schedules", status: "No Data", result: "-" , filename: 'regular_schedule'},
+            { name: "required_documents", status: "No Data", result: "-" , filename: 'required_document'},
+            { name: "service_areas", status: "No Data", result: "-" , filename: 'service_area'},
+            { name: "service", status: "No Data", result: "-" , filename: 'service'},
+            { name: "service_at_location", status: "No Data", result: "-" , filename: 'service_at_location'},
+            { name: "service_taxonomy", status: "No Data", result: "-" , filename: 'service_taxonomy'},
+            { name: "taxonomy", status: "No Data", result: "-" , filename: 'taxonomy'},
           ],
           selectedFile: null,
+          responseZip: ''
         };
       },
       methods: {
         async handleImageUpload(event, index){
+          this.files[index].status = 'Ready';
           const files = event.target.files
           const formData = new FormData()
           formData.append('file', files[0])
@@ -199,6 +202,35 @@
             this.files[index].status = 'Processing';
             this.files[index].result = 'Error';
             console.error(error, 'sasas')
+          })
+        },
+        async handleZipUpload(event){
+          const files = event.target.files
+          const formData = new FormData()
+          formData.append('file', files[0])
+          formData.append('type',  'zip')
+          await fetch('/validate/zip', {
+            method: 'POST',
+            body: formData,
+          })
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
+            this.responseZip = data; 
+          })
+          .catch(error => {
+            console.error(error, 'sasas')
+          })
+        },
+        validateZip(){
+          // console.log(this.responseZip.accessibility_for_disabilities)
+          // return false
+          this.files.map((data, index) => {
+            var name = data.filename
+            // console.log(this.responseZip[name], name)
+            data.status = 'Processing'
+            data.result = this.responseZip[name].valid
+            data.status = 'Processed'
           })
         }
       },
