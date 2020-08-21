@@ -278,6 +278,7 @@ class DataPackage {
 
     const result = {
       valid: true,
+      data: false,
       errors: []
     };
 
@@ -291,6 +292,9 @@ class DataPackage {
           done,
           value
         } = res);
+        if(value) {
+          result.data = true;
+        }
 
         /*
          * in 'forceCast' mode, bad lines will be

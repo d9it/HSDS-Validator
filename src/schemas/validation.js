@@ -19,6 +19,7 @@ const ValidationResult = Joi.object().keys({
   resource: Joi.string()
     .description('The resource name'),
   valid: Joi.boolean().required().description('Status flag indicating whether the resource is valid or not'),
+  data: Joi.boolean().required().description('Status flag indicating whether the resource has data or not'),
   errors: Joi.array().items(ValidationError).description('A collection of validation errors')
 }).meta({
   className: 'ValidationResult',

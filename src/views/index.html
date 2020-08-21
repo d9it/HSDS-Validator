@@ -205,6 +205,9 @@
           })
         },
         async handleZipUpload(event){
+          for(const f of this.files) {
+            f.status = "Processing";
+          }
           const files = event.target.files
           const formData = new FormData()
           formData.append('file', files[0])
@@ -217,6 +220,17 @@
           .then(data => {
             console.log(data)
             this.responseZip = data; 
+            if(data) {
+              for(const f of this.files) {
+                if(data[f.filename]) {
+                  f.result = data[f.filename].valid ? "Valid" : "Invalid";
+                  console.log(f.result);
+                } else {
+                  f.result = "Invalid";
+                }
+                f.status = "Processed";
+              }
+            }
           })
           .catch(error => {
             console.error(error, 'sasas')
