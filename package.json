@@ -4,8 +4,10 @@
   "version": "1.0.1",
   "description": "Open Referral - Validator microservice",
   "dependencies": {
+    "async": "^3.2.0",
     "axios": "^0.18.1",
     "boom": "^7.3.0",
+    "csv-parser": "^2.3.3",
     "datapackage": "^1.1.1",
     "element-ui": "^2.13.2",
     "express": "^4.17.1",
@@ -37,7 +39,6 @@
     "form-data": "^2.3.3",
     "hubot-test-helper": "^1.9.0",
     "mocha": "^5.2.0",
-    "nodemon": "^1.19.4",
     "sinon": "^7.2.2",
     "sinon-chai": "^2.14.0",
     "standard-version": "^5.0.0",

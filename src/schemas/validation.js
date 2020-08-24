@@ -20,6 +20,8 @@ const ValidationResult = Joi.object().keys({
     .description('The resource name'),
   valid: Joi.boolean().required().description('Status flag indicating whether the resource is valid or not'),
   data: Joi.boolean().required().description('Status flag indicating whether the resource has data or not'),
+  fields: Joi.number().required().description('Return the number of fields'),
+  header: Joi.number().required().description('Return the number of fields of csv'),
   errors: Joi.array().items(ValidationError).description('A collection of validation errors')
 }).meta({
   className: 'ValidationResult',

@@ -35,7 +35,7 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
-    <link rel="stylesheet" href="styles.css" />
+    <!-- <link rel="stylesheet" href="styles.css" /> -->
     <script src="./vue-script.js"></script>
     <title>HSDS-Validator</title>
   </head>
@@ -68,7 +68,7 @@
             </ol>
           </div>
         </div> -->
-        <div class="col-12 bg-gray mt-3">
+        <div class="col-12  mt-3">
           <h5 class="pt-3 header">Validator - About - Github</h5>
           <p class="mt-4">{{about}}</p>
           <input
@@ -83,8 +83,8 @@
           <button class="m-2 p-1 btn btn-success" @click="validateZip()">
             Run Validation Process
           </button>
-          <div class="row pl-2 pr-2">
-            <table class="border-table col-12 mb-3">
+          <div class="row pl-2 pr-2 example table-responsive">
+            <table class="table table-border col-12 mb-3">
               <thead>
                 <tr>
                   <td>Data Table</td>
@@ -94,13 +94,13 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(file,index) in files" :key="index">
+                <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index">
                   <td>{{file.name}}</td>
                   <td>
                     <input
                       @change="handleImageUpload($event, index)"
                       title="Choose CSV"
-                      class="inputFile"
+                      class="inputFile form-control-file"
                       ref="fileInput"
                       type="file"
                       name="chooseFile"
@@ -143,33 +143,28 @@
             "If uploading zip, data table names must match with HSDS table names",
           files: [
             // { name: "datapackage", status: "No Data", result: "-", filename: 'datapackage.json' },
-            {
-              name: "accessibility_for_disabilities",
-              status: "No Data",
-              result: "-",
-              filename: 'accessibility_for_disabilities'
-            },
-            { name: "contact", status: "No Data", result: "-" , filename: 'contact'},
-            { name: "eligibilty", status: "No Data", result: "-" , filename: 'eligibilty'},
-            { name: "funding", status: "No Data", result: "-" , filename: 'funding'},
-            { name: "holiday_schedule", status: "No Data", result: "-" , filename: 'holiday_schedule'},
-            { name: "language", status: "No Data", result: "-" , filename: 'language'},
-            { name: "location", status: "No Data", result: "-" , filename: 'location'},
-            { name: "meta_table_description", status: "No Data", result: "-" , filename: 'meta_table_description'},
-            { name: "metadata", status: "No Data", result: "-" , filename: 'metadata'},
-            { name: "organization", status: "No Data", result: "-" , filename: 'organization_id'},
-            { name: "payment_accepted", status: "No Data", result: "-" , filename: 'payments_accepted'},
-            { name: "phone", status: "No Data", result: "-" , filename: 'phone'},
-            { name: "physical_addresses", status: "No Data", result: "-" , filename: 'physical_address'},
-            { name: "postal_addresses", status: "No Data", result: "-" , filename: 'postal_address'},
-            { name: "program", status: "No Data", result: "-" , filename: 'program'},
-            { name: "regular_schedules", status: "No Data", result: "-" , filename: 'regular_schedule'},
-            { name: "required_documents", status: "No Data", result: "-" , filename: 'required_document'},
-            { name: "service_areas", status: "No Data", result: "-" , filename: 'service_area'},
-            { name: "service", status: "No Data", result: "-" , filename: 'service'},
-            { name: "service_at_location", status: "No Data", result: "-" , filename: 'service_at_location'},
-            { name: "service_taxonomy", status: "No Data", result: "-" , filename: 'service_taxonomy'},
-            { name: "taxonomy", status: "No Data", result: "-" , filename: 'taxonomy'},
+            { name: "accessibility_for_disabilities", status: "No Data", result: "-", filename: 'accessibility_for_disabilities', class: ''},
+            { name: "contact", status: "No Data", result: "-" , filename: 'contacts', class: ''},
+            { name: "eligibilty", status: "No Data", result: "-" , filename: 'eligibilty', class: ''},
+            { name: "funding", status: "No Data", result: "-" , filename: 'funding', class: ''},
+            { name: "holiday_schedule", status: "No Data", result: "-" , filename: 'holiday_schedules', class: ''},
+            { name: "language", status: "No Data", result: "-" , filename: 'languages', class: ''},
+            { name: "location", status: "No Data", result: "-" , filename: 'locations', class: ''},
+            { name: "meta_table_description", status: "No Data", result: "-" , filename: 'meta_table_descriptions', class: ''},
+            { name: "metadata", status: "No Data", result: "-" , filename: 'metadata', class: ''},
+            { name: "organization", status: "No Data", result: "-" , filename: 'organizations', class: ''},
+            { name: "payment_accepted", status: "No Data", result: "-" , filename: 'payments_accepted', class: ''},
+            { name: "phone", status: "No Data", result: "-" , filename: 'phones', class: ''},
+            { name: "physical_address", status: "No Data", result: "-" , filename: 'physical_addresses', class: ''},
+            { name: "postal_address", status: "No Data", result: "-" , filename: 'postal_addresses', class: ''},
+            { name: "program", status: "No Data", result: "-" , filename: 'programs', class: ''},
+            { name: "regular_schedule", status: "No Data", result: "-" , filename: 'regular_schedules', class: ''},
+            { name: "required_document", status: "No Data", result: "-" , filename: 'required_documents', class: ''},
+            { name: "service_area", status: "No Data", result: "-" , filename: 'service_areas', class: ''},
+            { name: "service", status: "No Data", result: "-" , filename: 'services', class: ''},
+            { name: "service_at_location", status: "No Data", result: "-" , filename: 'services_at_location', class: ''},
+            { name: "service_taxonomy", status: "No Data", result: "-" , filename: 'services_taxonomy', class: ''},
+            { name: "taxonomy", status: "No Data", result: "-" , filename: 'taxonomy', class: ''},
           ],
           selectedFile: null,
           responseZip: ''
@@ -181,7 +176,7 @@
           const files = event.target.files
           const formData = new FormData()
           formData.append('file', files[0])
-          formData.append('type',  this.files[index].filename)
+          formData.append('type',  this.files[index].name)
           this.files[index].status = 'Processing';
           await fetch('/validate/csv', {
             method: 'POST',
@@ -192,9 +187,13 @@
             this.files[index].status = 'Processed';
             if(data.valid == true) {
               this.files[index].result = 'Valid';
-              
+              if(data.header > data.fields) {
+                this.files[index].result = 'Valid with additions';
+              }
+              this.files[index].class = "alert alert-success";
             }else {
               this.files[index].result = 'InValid';
+              this.files[index].class = "alert alert-danger";
             }
             console.log(data)
           })
@@ -208,6 +207,7 @@
           for(const f of this.files) {
             f.status = "Processing";
           }
+
           const files = event.target.files
           const formData = new FormData()
           formData.append('file', files[0])
@@ -219,18 +219,24 @@
           .then(response => response.json())
           .then(data => {
             console.log(data)
-            this.responseZip = data; 
+            this.responseZip = data;
             if(data) {
               for(const f of this.files) {
                 if(data[f.filename]) {
                   f.result = data[f.filename].valid ? "Valid" : "Invalid";
+                  if(data[f.filename].valid && data[f.filename].header > data[f.filename].fields) {
+                    f.result = 'Valid with additions';
+                  }
                   console.log(f.result);
+                  f.class = data[f.filename].valid ? "alert alert-success" : "alert alert-danger";
                 } else {
-                  f.result = "Invalid";
+                  f.result = "Null";
+                  f.class = "alert alert-warning";
                 }
                 f.status = "Processed";
               }
             }
+
           })
           .catch(error => {
             console.error(error, 'sasas')

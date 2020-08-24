@@ -256,9 +256,8 @@ class DataPackage {
     }
 
     // get the selected resource definition
-    console.log("resourceName", resourceName);
-    const resource = this.package.getResource(resourceName);
 
+    const resource = this.package.getResource(resourceName);
     // create a new table instance
     // using the selected resource
     // schema and data source
@@ -279,6 +278,7 @@ class DataPackage {
     const result = {
       valid: true,
       data: false,
+      fields: resource.schema._fields.length,
       errors: []
     };
 
