@@ -69,8 +69,19 @@
           </div>
         </div> -->
         <div class="col-12  mt-3">
-          <h5 class="pt-3 header">Validator - About - Github</h5>
-          <p class="mt-4">{{about}}</p>
+          <h3 class="pt-3 header">Validator</h3>
+          <h5 class="pt-3 header">Human Services Data Specification (HSDS)</h5>
+          <p class="mt-4">
+            The Human Services Data Specification (HSDS) is a data standard established and maintained 
+            by the Open Referral project.
+            <br /><br />
+            You can use this website to check if your data conforms to the HSDS.
+            <br /><br />
+            Uplaod an HSDS zip file to validate multiple files or validate single files using the table below.
+            <br /><br />
+            Make sure your files are using the proper table names, which are documented in the "path" sections of 
+            the Specification.<br /><br />
+          </p>
           <input
             type="file"
             class="mb-1"
@@ -95,7 +106,7 @@
               </thead>
               <tbody>
                 <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index">
-                  <td>{{file.name}}</td>
+                  <td>{{file.filename+".csv"}}</td>
                   <td>
                     <input
                       @change="handleImageUpload($event, index)"
