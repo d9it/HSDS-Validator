@@ -4,128 +4,110 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- CSS only -->
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous" />
 
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"
-    />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet"  href="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js" />
     <!-- JS, Popper.js, and jQuery -->
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-      crossorigin="anonymous"
-    ></script>
-    <!-- <link rel="stylesheet" href="styles.css" /> -->
-    <script src="./vue-script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous" ></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"   integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous" ></script>
+    <link rel="stylesheet" href="styles.css" />
+	<script src="./vue-script.js"></script>
+	
     <title>HSDS-Validator</title>
   </head>
   <body>
-    <div class="mb-5" id="app">
-      <div class="row col-12">
-        <!-- <div class="col-6 mt-5 container">
-          <h1>Validator Home Page</h1>
-          <div class="mt-3">
-            <ol>
-              <li v-for="(rule,index) in rules" :key="index" class="pl-4">
-                {{rule}}
-              </li>
-              <li class="pl-4">
-                Status:
-                <ol type="a">
-                  <li v-for="(rule,index) in status" :key="index" class="pl-4">
-                    {{rule}}
-                  </li>
-                </ol>
-              </li>
-              <li class="pl-4">
-                Results:
-                <ol type="a">
-                  <li v-for="(rule,index) in results" :key="index" class="pl-4">
-                    {{rule}}
-                  </li>
-                </ol>
-              </li>
-            </ol>
-          </div>
-        </div> -->
-        <div class="col-12  mt-3">
-          <h3 class="pt-3 header">Validator</h3>
-          <h5 class="pt-3 header">Human Services Data Specification (HSDS)</h5>
-          <p class="mt-4">
-            The Human Services Data Specification (HSDS) is a data standard established and maintained 
-            by the Open Referral project.
-            <br /><br />
-            You can use this website to check if your data conforms to the HSDS.
-            <br /><br />
-            Uplaod an HSDS zip file to validate multiple files or validate single files using the table below.
-            <br /><br />
-            Make sure your files are using the proper table names, which are documented in the "path" sections of 
-            the Specification.<br /><br />
-          </p>
-          <input
-            type="file"
-            class="mb-1"
-            name="zip_file"
-            placeholder="Upload Zip"
-            id=""
-            @change="handleZipUpload($event)"
-          /><br />
-          <span class="text-muted">* {{condition}}</span>
-          <button class="m-2 p-1 btn btn-success" @click="validateZip()">
-            Run Validation Process
-          </button>
-          <div class="row pl-2 pr-2 example table-responsive">
-            <table class="table table-border col-12 mb-3">
-              <thead>
-                <tr>
-                  <td>Data Table</td>
-                  <td>Action</td>
-                  <td>Status</td>
-                  <td>Result</td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index">
-                  <td>{{file.filename+".csv"}}</td>
-                  <td>
-                    <input
-                      @change="handleImageUpload($event, index)"
-                      title="Choose CSV"
-                      class="inputFile form-control-file"
-                      ref="fileInput"
-                      type="file"
-                      name="chooseFile"
-                      id="fileUpload"
-                    />
-                  </td>
-                  <td>{{file.status}}</td>
-                  <td>{{file.result}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div id="app">
+      	<div class="container">
+			<!-- <div class="col-6 mt-5 container">
+			<h1>Validator Home Page</h1>
+			<div class="mt-3">
+				<ol>
+				<li v-for="(rule,index) in rules" :key="index" class="pl-4">
+					{{rule}}
+				</li>
+				<li class="pl-4">
+					Status:
+					<ol type="a">
+					<li v-for="(rule,index) in status" :key="index" class="pl-4">
+						{{rule}}
+					</li>
+					</ol>
+				</li>
+				<li class="pl-4">
+					Results:
+					<ol type="a">
+					<li v-for="(rule,index) in results" :key="index" class="pl-4">
+						{{rule}}
+					</li>
+					</ol>
+				</li>
+				</ol>
+			</div>
+			</div> -->
+			<div class="col-12 mt-3">
+				<div class="card">
+					<h5 class="card-header">Validator</h5>
+					<div class="card-body">
+						<h5 class="card-title">Human Services Data Specification (HSDS)</h5>
+						<p class="card-text">
+							The Human Services Data Specification (HSDS) is a data standard established and maintained by the Open Referral project.
+						</p>
+						<p class="card-text">
+							You can use this website to check if your data conforms to the HSDS.
+						</p>
+						<p class="card-text">
+							Uplaod an HSDS zip file to validate multiple files or validate single files using the table below.
+						</p>
+						<p class="card-text">
+							Make sure your files are using the proper table names, which are documented in the "path" sections of 
+							the Specification.
+						</p>
+						<br/>
+						<div class="file-upload mb-4" id="chooseFileall">
+							<div class="file-select">
+								<div class="file-select-button" id="fileName1">Choose File</div>
+								<div class="file-select-name" id="emptyfile">No file chosen...</div> 
+								<input @change="handleZipUpload($event)" type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" />
+							</div>
+						</div>
+						<!-- <input type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" id="" @change="handleZipUpload($event)" /><br/> -->
+						<span class="text-muted">* {{condition}}</span>
+						<button class="btn btn-success" @click="validateZip()">Run Validation Process</button>
+					</div>
+				</div>
+			</div>
+			
+			<div class=" example table-responsive col-md-12 mt-4">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th scope="col">Data Table</th>
+							<th scope="col" class="text-center">Action</th>
+							<th scope="col" class="text-center">Status</th>
+							<th scope="col" class="text-center">Result</th>
+						</tr>
+					</thead>
+					<tbody id="fileUpload">
+						<tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index" >
+							<td>{{file.filename+".csv"}}</td>
+							<td class="text-center">
+								<div class="file-upload">
+									<div class="file-select">
+										<div class="file-select-button" id="fileName">Choose File</div>
+										<div class="file-select-name" id="noFile">No file chosen...</div> 
+										<input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+									</div>
+								</div>
+							</td>
+							<td class="text-center">{{file.status}}</td>
+							<td class="text-center">{{file.result}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+	    </div>
     </div>
   </body>
   <script>
@@ -182,6 +164,8 @@
         };
       },
       methods: {
+
+		
         async handleImageUpload(event, index){
           this.files[index].status = 'Ready';
           const files = event.target.files
@@ -201,10 +185,10 @@
               if(data.header > data.fields) {
                 this.files[index].result = 'Valid with additions';
               }
-              this.files[index].class = "alert alert-success";
+              this.files[index].class = "table-success";
             }else {
               this.files[index].result = 'InValid';
-              this.files[index].class = "alert alert-danger";
+              this.files[index].class = "table-danger";
             }
             console.log(data)
           })
@@ -239,10 +223,10 @@
                     f.result = 'Valid with additions';
                   }
                   console.log(f.result);
-                  f.class = data[f.filename].valid ? "alert alert-success" : "alert alert-danger";
+                  f.class = data[f.filename].valid ? "table-success" : "table-danger";
                 } else {
                   f.result = "Null";
-                  f.class = "alert alert-warning";
+                  f.class = "table-warning";
                 }
                 f.status = "Processed";
               }
@@ -267,4 +251,29 @@
       },
     });
   </script>
+  <script>
+	$('#fileUpload input').bind('change', function (event) {
+		var filename = $(this).val();
+		if (/^\s*$/.test(filename)) {
+			$(this).prev().text("No file chosen..."); 
+		}
+		else {
+			$(this).prev().text(filename.replace("C:\\fakepath\\", "")); 
+		}
+	});
+</script>
+
+<script>
+
+	$('#chooseFileall input').bind('change', function () {
+		var filename = $(this).val();
+		if (/^\s*$/.test(filename)) {
+			$(this).prev().text("No file chosen..."); 
+		}
+		else {
+			$(this).prev().text(filename.replace("C:\\fakepath\\", "")); 
+		}
+	});
+
+</script>
 </html>
