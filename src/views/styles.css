@@ -7,10 +7,10 @@
   border-bottom: 1px solid gray;
 }
 .card {
-   border: 1px solid #f44336;
+   border: 1px solid #8E0B0B;
 }
 .card-header {
-  background: #ff9800;
+  background: #8E0B0B;
   color: #fff;
 }
 input [type= "file"]:focus{
