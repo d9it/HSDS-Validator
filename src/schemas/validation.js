@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 const Joi = require('joi');
 
 
@@ -45,51 +44,3 @@ module.exports = {
   ValidationResult,
   ValidationResultBulk
 };
-=======
-const Joi = require('joi');
-
-
-const ValidationError = Joi.object().keys({
-  col: Joi.number()
-    .description('The column number of the bad entry'),
-  row: Joi.number()
-    .description('The row number of the bad entry'),
-  message: Joi.string()
-    .description('The error message'),
-  details: Joi.string()
-    .description('Descriptive details for guiding the client on how to resolve the issue')
-}).meta({
-  className: 'ValidationError',
-  description: 'Describes an error that occured during a data resource validation'
-});
-
-const ValidationResult = Joi.object().keys({
-  resource: Joi.string()
-    .description('The resource name'),
-  valid: Joi.boolean().required().description('Status flag indicating whether the resource is valid or not'),
-  data: Joi.boolean().required().description('Status flag indicating whether the resource has data or not'),
-  fields: Joi.number().required().description('Return the number of fields'),
-  header: Joi.number().required().description('Return the number of fields of csv'),
-  errors: Joi.array().items(ValidationError).description('A collection of validation errors')
-}).meta({
-  className: 'ValidationResult',
-  description: 'Resource validation result'
-});
-
-const ValidationResultBulk = Joi.object().keys({
-  resource: Joi.string()
-    .description('The resource name'),
-  valid: Joi.boolean().required().description('Status flag indicating whether the resource is valid or not'),
-  errors: Joi.array().items(ValidationError).description('A collection of validation errors')
-}).meta({
-  className: 'ValidationResultBulk',
-  description: 'Resource validation bulk result'
-});
-
-
-module.exports = {
-  ValidationError,
-  ValidationResult,
-  ValidationResultBulk
-};
->>>>>>> bf8c246c4ccef79f67a9d86209d51c08fae578ef
