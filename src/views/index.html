@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous" ></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"   integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous" ></script>
     <link rel="stylesheet" href="styles.css" />
-	<script src="./vue-script.js"></script>
+    <script src="./vue-script.js"></script>
 	
     <title>HSDS-Validator</title>
   </head>
@@ -48,7 +48,7 @@
           </div> -->
         <div class="col-12 mt-3">
           <div class="card">
-            <h5 class="card-header">HSDS Validator</h5>
+            <h5 class="card-header">HSDS Validator <a  class="text-decoration:none" href="javscript:;" @click="selectVersion(true)">v.2.0</a> <a href="javscript:;" class="text-decoration:none"  @click="selectVersion(false)">v.1.1</a></h5>
             <div class="card-body">
               <!-- <h5 class="card-title">Human Services Data Specification (HSDS)</h5> -->
               <p class="card-text">
@@ -85,8 +85,24 @@
                 <th scope="col" class="text-center">Result</th>
               </tr>
             </thead>
-            <tbody id="fileUpload">
+            <tbody id="fileUpload" v-if="!V2Selected">
               <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index" >
+                <td>{{file.filename+".csv"}}</td>
+                <td class="text-center">
+                  <div class="file-upload">
+                    <div class="file-select">
+                      <div class="file-select-button" id="fileName">Choose File</div>
+                      <div class="file-select-name" id="noFile">No file chosen...</div> 
+                      <input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+                    </div>
+                  </div>
+                </td>
+                <td class="text-center">{{file.status}}</td>
+                <td class="text-center">{{file.result}}</td>
+              </tr>
+            </tbody>
+            <tbody id="fileUpload" v-if="V2Selected">
+              <tr v-bind:class="[file.class]" v-for="(file,index) in filesV2" :key="index" >
                 <td>{{file.filename+".csv"}}</td>
                 <td class="text-center">
                   <div class="file-upload">
@@ -159,50 +175,79 @@
             { name: "service_area", status: "No Data", result: "-" , filename: 'service_areas', class: ''},
             { name: "service", status: "No Data", result: "-" , filename: 'services', class: ''},
             { name: "service_at_location", status: "No Data", result: "-" , filename: 'services_at_location', class: ''},
-            { name: "service_taxonomy", status: "No Data", result: "-" , filename: 'services_taxonomy', class: ''},
+            { name: "service_attribute", status: "No Data", result: "-" , filename: 'services_taxonomy', class: ''},
             { name: "taxonomy", status: "No Data", result: "-" , filename: 'taxonomy', class: ''},
           ],
+          filesV2: [
+            // { name: "datapackage", status: "No Data", result: "-", filename: 'datapackage.json' },
+            { name: "accessibility_for_disabilities", status: "No Data", result: "-", filename: 'accessibility_for_disabilities', class: ''},
+            { name: "contact", status: "No Data", result: "-" , filename: 'contacts', class: ''},
+            { name: "eligibilty", status: "No Data", result: "-" , filename: 'eligibilty', class: ''},
+            { name: "funding", status: "No Data", result: "-" , filename: 'funding', class: ''},
+            { name: "holiday_schedule", status: "No Data", result: "-" , filename: 'holiday_schedules', class: ''},
+            { name: "language", status: "No Data", result: "-" , filename: 'languages', class: ''},
+            { name: "location", status: "No Data", result: "-" , filename: 'locations', class: ''},
+            { name: "meta_table_description", status: "No Data", result: "-" , filename: 'meta_table_descriptions', class: ''},
+            { name: "metadata", status: "No Data", result: "-" , filename: 'metadata', class: ''},
+            { name: "organization", status: "No Data", result: "-" , filename: 'organizations', class: ''},
+            { name: "payment_accepted", status: "No Data", result: "-" , filename: 'payments_accepted', class: ''},
+            { name: "phone", status: "No Data", result: "-" , filename: 'phones', class: ''},
+            { name: "physical_address", status: "No Data", result: "-" , filename: 'physical_addresses', class: ''},
+            { name: "postal_address", status: "No Data", result: "-" , filename: 'postal_addresses', class: ''},
+            { name: "program", status: "No Data", result: "-" , filename: 'programs', class: ''},
+            { name: "schedule", status: "No Data", result: "-" , filename: 'schedules', class: ''},
+            { name: "required_document", status: "No Data", result: "-" , filename: 'required_documents', class: ''},
+            { name: "service_area", status: "No Data", result: "-" , filename: 'service_areas', class: ''},
+            { name: "service", status: "No Data", result: "-" , filename: 'services', class: ''},
+            { name: "service_at_location", status: "No Data", result: "-" , filename: 'services_at_location', class: ''},
+            { name: "service_attribute", status: "No Data", result: "-" , filename: 'service_attribute', class: ''},
+            { name: "taxonomy_term", status: "No Data", result: "-" , filename: 'taxonomy_term', class: ''},
+          ],
           selectedFile: null,
-          responseZip: ''
+          responseZip: '',
+          V2Selected: false
         };
       },
       methods: {
 
 		
         async handleImageUpload(event, index){
-          this.files[index].status = 'Ready';
+          const filesByVersion =  this.V2Selected ?  this.filesV2 :  this.files  
+         filesByVersion[index].status = 'Ready';
           const files = event.target.files
           const formData = new FormData()
           formData.append('file', files[0])
-          formData.append('type',  this.files[index].name)
-          this.files[index].status = 'Processing';
-          await fetch('/validate/csv', {
+          formData.append('type', filesByVersion[index].name)
+          const url = this.V2Selected ? '/v2/validate/csv' : '/validate/csv' 
+         filesByVersion[index].status = 'Processing';
+          await fetch(url, {
             method: 'POST',
             body: formData,
           })
           .then(response => response.json())
           .then(data => {
-            this.files[index].status = 'Processed';
+           filesByVersion[index].status = 'Processed';
             if(data.valid == true) {
-              this.files[index].result = 'Valid';
+             filesByVersion[index].result = 'Valid';
               if(data.header > data.fields) {
-                this.files[index].result = 'Valid with additions';
+               filesByVersion[index].result = 'Valid with additions';
               }
-              this.files[index].class = "table-success";
+             filesByVersion[index].class = "table-success";
             }else {
-              this.files[index].result = 'InValid';
-              this.files[index].class = "table-danger";
+             filesByVersion[index].result = 'InValid';
+             filesByVersion[index].class = "table-danger";
             }
             console.log(data)
           })
           .catch(error => {
-            this.files[index].status = 'Processing';
-            this.files[index].result = 'Error';
+           filesByVersion[index].status = 'Processing';
+           filesByVersion[index].result = 'Error';
             console.error(error, 'sasas')
           })
         },
         async handleZipUpload(event){
-          for(const f of this.files) {
+          const filesByVersion =  this.V2Selected ?  this.filesV2 :  this.files 
+          for(const f of filesByVersion) {
             f.status = "Processing";
           }
 
@@ -210,7 +255,8 @@
           const formData = new FormData()
           formData.append('file', files[0])
           formData.append('type',  'zip')
-          await fetch('/validate/zip', {
+          const url = this.V2Selected ? '/v2/validate/zip' : '/validate/zip'
+          await fetch(url, {
             method: 'POST',
             body: formData,
           })
@@ -219,7 +265,8 @@
             console.log(data)
             this.responseZip = data;
             if(data) {
-              for(const f of this.files) {
+              
+              for(const f of filesByVersion) {
                 if(data[f.filename]) {
                   f.result = data[f.filename].valid ? "Valid" : "Invalid";
                   if(data[f.filename].valid && data[f.filename].header > data[f.filename].fields) {
@@ -250,6 +297,9 @@
             data.result = this.responseZip[name].valid
             data.status = 'Processed'
           })
+        },
+        selectVersion(value) {
+          this.V2Selected = value
         }
       },
     });
