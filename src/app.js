@@ -31,7 +31,7 @@ router.get("/", function (req, res) {
 app.use("/abc", router);
 // set defaults
 nconf.overrides({
-  HOST: "localhost",
+  HOST: "0.0.0.0",
   PORT: 3000,
 });
 
@@ -232,6 +232,14 @@ const Application = (function Bootstrap() {
   };
 })();
 
+
+process.on('uncaughtException', (err) => {
+  console.error(`Caught exception: ${err}`);
+});
+
+process.on('unhandledRejection', (reason, p) => {
+  console.error('Unhandled Rejection at:', p, 'reason:', reason);
+});
 /**
  * Start the application
  */

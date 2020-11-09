@@ -10,6 +10,8 @@ const Joi = require('joi');
 const fs = require('fs');
 const extract = require('extract-zip');
 const path = require('path');
+const csv = require('csv-parser')
+const async = require('async')
 
 const {
   ValidationResult
@@ -69,15 +71,22 @@ module.exports = function(server, datapackage) {
             throw new Error('Form should contain the field "file" with a valid resource data stream');
           }
 
-          // validate the input stream using
-          // the provided resource type definition
           const result = await datapackage.validateResource(stream, type);
+          let csvPath = path.join(process.cwd(), "public/"+( (new Date()).getTime())+".csv" );
 
-          if (!result.valid) {
-            return h.response(result).code(422);
-          }
+          await fs.writeFileSync(csvPath, stream._data);
+          return new Promise(function(resolve,reject){
+            fs.createReadStream(csvPath)
+            .pipe(csv())
+            .on('headers', (headers) => {
+              result.header = headers.length;
+              if (!result.valid) {
+                resolve(h.response(result).code(422));
+              }
+              resolve(h.response(result).code(200));
+            });          
+          });          
 
-          return h.response(result).code(200);
         } catch (e) {
           return Boom.badRequest(e.message);
         }
@@ -133,7 +142,6 @@ module.exports = function(server, datapackage) {
             throw new Error('Form should contain the field "file" with a valid resource data stream');
           }
 
-          console.log("stream", stream);
           // validate the input stream using
           // the provided resource type definition
           await fs.writeFileSync('filename1.zip', stream._data);
@@ -145,250 +153,67 @@ module.exports = function(server, datapackage) {
 
           let resultArr = {};
           await extract('filename1.zip', { dir: dirPath });
+          const _files = [
+            { name: "accessibility_for_disabilities", status: "No Data", result: "-", filename: 'accessibility_for_disabilities', class: ''},
+            { name: "contact", status: "No Data", result: "-" , filename: 'contacts', class: ''},
+            { name: "eligibilty", status: "No Data", result: "-" , filename: 'eligibilty', class: ''},
+            { name: "funding", status: "No Data", result: "-" , filename: 'funding', class: ''},
+            { name: "holiday_schedule", status: "No Data", result: "-" , filename: 'holiday_schedules', class: ''},
+            { name: "language", status: "No Data", result: "-" , filename: 'languages', class: ''},
+            { name: "location", status: "No Data", result: "-" , filename: 'locations', class: ''},
+            { name: "meta_table_description", status: "No Data", result: "-" , filename: 'meta_table_descriptions', class: ''},
+            { name: "metadata", status: "No Data", result: "-" , filename: 'metadata', class: ''},
+            { name: "organization", status: "No Data", result: "-" , filename: 'organizations', class: ''},
+            { name: "payment_accepted", status: "No Data", result: "-" , filename: 'payments_accepted', class: ''},
+            { name: "phone", status: "No Data", result: "-" , filename: 'phones', class: ''},
+            { name: "physical_address", status: "No Data", result: "-" , filename: 'physical_addresses', class: ''},
+            { name: "postal_address", status: "No Data", result: "-" , filename: 'postal_addresses', class: ''},
+            { name: "program", status: "No Data", result: "-" , filename: 'programs', class: ''},
+            { name: "regular_schedule", status: "No Data", result: "-" , filename: 'regular_schedules', class: ''},
+            { name: "required_document", status: "No Data", result: "-" , filename: 'required_documents', class: ''},
+            { name: "service_area", status: "No Data", result: "-" , filename: 'service_areas', class: ''},
+            { name: "service", status: "No Data", result: "-" , filename: 'services', class: ''},
+            { name: "service_at_location", status: "No Data", result: "-" , filename: 'services_at_location', class: ''},
+            { name: "service_taxonomy", status: "No Data", result: "-" , filename: 'services_taxonomy', class: ''},
+            { name: "taxonomy", status: "No Data", result: "-" , filename: 'taxonomy', class: ''},
 
-          try {
-            let cName = "accessibility_for_disabilities";
-            let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
+          ];
+
+          for(let f of _files) {
+            try {
+              let cName = f.filename;
+              let csvPath = path.join(dirPath, cName+".csv");
+              if (fs.existsSync(csvPath)) {
+                resultArr[cName] = await datapackage.validateResource(csvPath, f.name);
+              }
+            } catch(err) {
+              console.error(err)
             }
-          } catch(err) {
-            console.error(err)
           }
-          try {
-            let cName = "contact";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "eligibilty";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "funding";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "holiday_schedule";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "language";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "location";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "meta_table_description";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "metadata";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "organization_id";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "payments_accepted";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "phone";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "physical_address";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "postal_address";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "program";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "regular_schedule";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "required_document";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "service_area";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "service";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "service_at_location";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "service_taxonomy";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          try {
-            let cName = "taxonomy";
-                      let csvPath = path.join(dirPath, cName+".csv");
-            if (fs.existsSync(csvPath)) {
-              resultArr[cName] = await datapackage.validateResource(path.join(dirPath, cName+".csv"), cName);
-            } else {
-              resultArr[cName] = { valid: false };
-            }
-          } catch(err) {
-            console.error(err)
-          }
-          return h.response(resultArr).code(200);
+          return new Promise(function(resolve,reject){
+            async.eachSeries(_files, function iteratee(f, callback) {
+              try {
+                let cName = f.filename;
+                let csvPath = path.join(dirPath, cName+".csv");
+                if (fs.existsSync(csvPath)) {
+                  fs.createReadStream(csvPath)
+                  .pipe(csv())
+                  .on('headers', (headers) => {
+                    resultArr[cName].header = headers.length;
+                    callback(null);
+                  })
+                } else {
+                  resultArr[cName].header = 0;
+                  callback(null);
+                }
+              } catch(err) {
+                callback(null);
+              }
+            }, function () {
+              resolve(h.response(resultArr).code(200));
+            });
+          });
+
         } catch (e) { 
           return Boom.badRequest(e.message);
         }
