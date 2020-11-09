@@ -43,6 +43,7 @@ const Application = (function Bootstrap() {
 
   // the data package instance
   let _datapackage = null;
+  let _datapackageV2 = null;
 
   /**
    * Sets up the logging framework.
@@ -87,6 +88,7 @@ const Application = (function Bootstrap() {
 
     // load the data package instance
     _datapackage = await DataPackage.load(`${__dirname}/datapackage.json`);
+    _datapackageV2 = await DataPackage.load(`${__dirname}/datapackageV2.json`);
 
     // setup routing
     await _setupRouting(_server);
@@ -201,7 +203,7 @@ const Application = (function Bootstrap() {
         // load all controller modules recursively
         recursive(normalizedPath, (err, files) => {
           files.forEach((file) => {
-            require(file)(server, _datapackage);
+            require(file)(server, _datapackage, _datapackageV2);
           });
 
           // done
