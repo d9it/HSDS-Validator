@@ -31,7 +31,7 @@ router.get("/", function (req, res) {
 app.use("/abc", router);
 // set defaults
 nconf.overrides({
-  HOST: "localhost",
+  HOST: "0.0.0.0",
   PORT: 3000,
 });
 
