@@ -7,11 +7,24 @@
   border-bottom: 1px solid gray;
 }
 .card {
+  border: none;
+}
+.card-body {
    border: 1px solid #8E0B0B;
+   border-radius: 0 0 4px 4px;
+   border-top: none;
 }
 .card-header {
   background: #8E0B0B;
   color: #fff;
+  padding: 5px 0px 0 0;
+}
+.nav-tabs .nav-link, .nav-tabs .nav-link.disabled {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-right: 5px;
+  margin-bottom: -1px;
 }
 input [type= "file"]:focus{
   outline: none;

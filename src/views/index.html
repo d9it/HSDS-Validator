@@ -48,9 +48,159 @@
           </div> -->
         <div class="col-12 mt-3">
           <div class="card">
-            <h5 class="card-header">HSDS Validator <a  class="text-decoration:none" href="javscript:;" @click="selectVersion(true)">v.2.0</a> <a href="javscript:;" class="text-decoration:none"  @click="selectVersion(false)">v.1.1</a></h5>
+            <ul class="nav nav-tabs card-header">
+              <li class="nav-item">
+                <a class="nav-link disabled" href="javscript:void(0)">HSDS Validator</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#v2" @click="selectVersion(true)">v.2.0</a> 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-toggle="tab" href="#v1" @click="selectVersion(false)">v.1.1</a>
+              </li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="v2">
+                <div class="card-body">
+                  <!-- <h5 class="card-title">Human Services Data Specification (HSDS)</h5> -->
+                  <p class="card-text">
+                    You can use this website to check if your data conforms to the <a href="http://docs.openreferral.org/en/latest/hsds/" target="_blank">Human Services Data Specification</a> (HSDS), a data standard established and maintained by the <a href="https://openreferral.org/" target="_blank">Open Referral</a> project.
+                  </p>
+                  <p class="card-text">
+                    Upload an HSDS zip file to validate multiple files or validate single files using the table below.
+                  </p>
+                  <p class="card-text">
+                    Make sure your files are using the proper table names, which are documented in the “path” sections of the HSDS specification.
+                  </p>
+                  <br/>
+                  <div class="file-upload mb-4" id="chooseFileall">
+                    <div class="file-select">
+                      <div class="file-select-button" id="fileName1">Choose File</div>
+                      <div class="file-select-name" id="emptyfile">No file chosen...</div> 
+                      <input @change="handleZipUpload($event)" type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" />
+                    </div>
+                  </div>
+                  <!-- <input type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" id="" @change="handleZipUpload($event)" /><br/> -->
+                  <span class="text-muted d-none">* {{condition}}</span>
+                  <button class="btn btn-success" @click="validateZip()">Run Validation Process</button>
+                </div>
+                <div class=" example table-responsive mt-4">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">CSV Name</th>
+                        <th scope="col" class="text-center">Upload</th>
+                        <th scope="col" class="text-center">Status</th>
+                        <th scope="col" class="text-center">Result</th>
+                      </tr>
+                    </thead>
+                    <tbody id="fileUpload" v-if="!V2Selected">
+                      <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index" >
+                        <td>{{file.filename+".csv"}}</td>
+                        <td class="text-center">
+                          <div class="file-upload">
+                            <div class="file-select">
+                              <div class="file-select-button" id="fileName">Choose File</div>
+                              <div class="file-select-name" id="noFile">No file chosen...</div> 
+                              <input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{file.status}}</td>
+                        <td class="text-center">{{file.result}}</td>
+                      </tr>
+                    </tbody>
+                    <tbody id="fileUpload" v-if="V2Selected">
+                      <tr v-bind:class="[file.class]" v-for="(file,index) in filesV2" :key="index" >
+                        <td>{{file.filename+".csv"}}</td>
+                        <td class="text-center">
+                          <div class="file-upload">
+                            <div class="file-select">
+                              <div class="file-select-button" id="fileName">Choose File</div>
+                              <div class="file-select-name" id="noFile">No file chosen...</div> 
+                              <input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{file.status}}</td>
+                        <td class="text-center">{{file.result}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="tab-pane fade" id="v1">
+                <div class="card-body">
+                  <!-- <p class="card-text">
+                    You can use this website to check if your data conforms to the <a href="http://docs.openreferral.org/en/latest/hsds/" target="_blank">Human Services Data Specification</a> (HSDS), a data standard established and maintained by the <a href="https://openreferral.org/" target="_blank">Open Referral</a> project.
+                  </p> -->
+                  <p class="card-text">
+                    Upload an HSDS zip file to validate multiple files or validate single files using the table below.
+                  </p>
+                  <p class="card-text">
+                    Make sure your files are using the proper table names, which are documented in the “path” sections of the HSDS specification.
+                  </p>
+                  <br/>
+                  <div class="file-upload mb-4" id="chooseFileall">
+                    <div class="file-select">
+                      <div class="file-select-button" id="fileName1">Choose File</div>
+                      <div class="file-select-name" id="emptyfile">No file chosen...</div> 
+                      <input @change="handleZipUpload($event)" type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" />
+                    </div>
+                  </div>
+                  <!-- <input type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" id="" @change="handleZipUpload($event)" /><br/> -->
+                  <span class="text-muted d-none">* {{condition}}</span>
+                  <button class="btn btn-success" @click="validateZip()">Run Validation Process</button>
+                </div>
+                <div class=" example table-responsive mt-4">
+                  <table class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">CSV Name</th>
+                        <th scope="col" class="text-center">Upload</th>
+                        <th scope="col" class="text-center">Status</th>
+                        <th scope="col" class="text-center">Result</th>
+                      </tr>
+                    </thead>
+                    <tbody id="fileUpload" v-if="!V2Selected">
+                      <tr v-bind:class="[file.class]" v-for="(file,index) in files" :key="index" >
+                        <td>{{file.filename+".csv"}}</td>
+                        <td class="text-center">
+                          <div class="file-upload">
+                            <div class="file-select">
+                              <div class="file-select-button" id="fileName">Choose File</div>
+                              <div class="file-select-name" id="noFile">No file chosen...</div> 
+                              <input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{file.status}}</td>
+                        <td class="text-center">{{file.result}}</td>
+                      </tr>
+                    </tbody>
+                    <tbody id="fileUpload" v-if="V2Selected">
+                      <tr v-bind:class="[file.class]" v-for="(file,index) in filesV2" :key="index" >
+                        <td>{{file.filename+".csv"}}</td>
+                        <td class="text-center">
+                          <div class="file-upload">
+                            <div class="file-select">
+                              <div class="file-select-button" id="fileName">Choose File</div>
+                              <div class="file-select-name" id="noFile">No file chosen...</div> 
+                              <input @change="handleImageUpload($event, index)" title="Choose CSV" class="inputFile form-control-file" ref="fileInput" type="file" name="chooseFile" />
+                            </div>
+                          </div>
+                        </td>
+                        <td class="text-center">{{file.status}}</td>
+                        <td class="text-center">{{file.result}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+            <!-- <h5 class="card-header">HSDS Validator <a  class="text-decoration:none" href="javscript:;" @click="selectVersion(true)">v.2.0</a> <a href="javscript:;" class="text-decoration:none"  @click="selectVersion(false)">v.1.1</a></h5>
             <div class="card-body">
-              <!-- <h5 class="card-title">Human Services Data Specification (HSDS)</h5> -->
+             <h5 class="card-title">Human Services Data Specification (HSDS)</h5>
               <p class="card-text">
                 You can use this website to check if your data conforms to the <a href="http://docs.openreferral.org/en/latest/hsds/" target="_blank">Human Services Data Specification</a> (HSDS), a data standard established and maintained by the <a href="https://openreferral.org/" target="_blank">Open Referral</a> project.
               </p>
@@ -68,14 +218,20 @@
                   <input @change="handleZipUpload($event)" type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" />
                 </div>
               </div>
-              <!-- <input type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" id="" @change="handleZipUpload($event)" /><br/> -->
+              <input type="file" class="mb-1" name="zip_file" placeholder="Upload Zip" id="" @change="handleZipUpload($event)" /><br/>
               <span class="text-muted d-none">* {{condition}}</span>
               <button class="btn btn-success" @click="validateZip()">Run Validation Process</button>
-            </div>
+            </div> -->
+          </div>
+          <br/>
+          <hr/>
+          <div class="footer_text text-center">
+              <p>This website was created and is maintain by <a href="http://sarapis.org/" target="_blank">Sarapis</a>.</p>
+              <br/>
           </div>
         </div>
         
-        <div class=" example table-responsive col-md-12 mt-4">
+        <!-- <div class=" example table-responsive col-md-12 mt-4">
           <table class="table table-bordered">
             <thead>
               <tr>
@@ -118,13 +274,8 @@
               </tr>
             </tbody>
           </table>
-        </div>
-        <br/>
-        <hr/>
-        <div class="footer_text text-center">
-            <p>This website was created and is maintain by <a href="http://sarapis.org/" target="_blank">Sarapis</a>.</p>
-            <br/>
-        </div>
+        </div> -->
+        
 
 	    </div>
     </div>
